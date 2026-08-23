@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ObjectRoot<T> : MonoBehaviour, IObjectRoot<T> where T : class{
+public abstract class ObjectRoot<T> : MonoBehaviour where T : MonoBehaviour{
     readonly Dictionary<Type, object> _componentsCache = new();
+    
+    public event Action onStructureChanged;
 
-    public new T1 GetComponent<T1>() where T1 : T{
-        var componentsList = GetComponents<T1>();
+    public new T1 GetPart<T1>() where T1 : T{
+        var componentsList = GetParts<T1>();
         if (componentsList.Count == 0){
-            return default;
+            return null;
         }
         if (componentsList.Count > 1){
             Debug.LogWarning(
@@ -17,7 +19,7 @@ public abstract class ObjectRoot<T> : MonoBehaviour, IObjectRoot<T> where T : cl
         return componentsList[0];
     }
 
-    public new virtual List<T1> GetComponents<T1>() where T1 : T{
+    public new virtual IReadOnlyList<T1> GetParts<T1>() where T1 : T{
         var type = typeof(T1);
         if (_componentsCache.TryGetValue(type, out var cachedObject)){
             return (List<T1>)cachedObject;
@@ -31,12 +33,31 @@ public abstract class ObjectRoot<T> : MonoBehaviour, IObjectRoot<T> where T : cl
         return newList;
     }
 
-    public void ClearCache(){
+    public void OnStructureChanged(){
         _componentsCache.Clear();
+        onStructureChanged?.Invoke();
     }
+    
+    public T1 AddPart<T1>() where T1 : T{
+        var part = gameObject.AddComponent<T1>();
+        OnPartAdded(part);
+        OnStructureChanged();
+        return part;
+    }
+
+    public void RemovePart(T part){
+        if (part == null){
+            Debug.LogWarning($"Attempted to remove a null part from {gameObject.name}. Operation aborted.");
+            return;
+        }
+        Destroy(part);
+        OnStructureChanged();
+    }
+
+    protected virtual void OnPartAdded(T part){ }
 }
 
-public interface IObjectRoot<T> where T : class{
-    public T1 GetComponent<T1>() where T1 : T;
-    public List<T1> GetComponents<T1>() where T1 : T;
-}
+// public interface IObjectRoot<T> where T : class{
+//     public T1 GetPart<T1>() where T1 : T;
+//     public IReadOnlyList<T1> GetParts<T1>() where T1 : T;
+// }
