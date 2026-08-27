@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class MyExtentions{
@@ -20,16 +21,21 @@ public static class MyExtentions{
     /// Returns a random element from the read-only list.
     /// </summary>
     /// <typeparam name="T">The type of elements in the list.</typeparam>
-    /// <param name="list">The read-only list to select from.</param>
+    /// <param name="collection">The IEnumerable to select from.</param>
     /// <returns>A random element of type <typeparamref name="T"/>, or default if the list is empty.</returns>
-    public static T Random<T>(this IReadOnlyList<T> list){
-        if (list.Count < 1){
-            Debug.LogWarning("Trying to get random element from empty list");
+    public static T Random<T>(this IEnumerable<T> collection)
+    {
+        // Enumerable.Any() is safer for generic IEnumerables than checking Count
+        if (collection == null || !collection.Any())
+        {
+            Debug.LogWarning("Trying to get random element from empty or null collection");
             return default;
         }
-        var i = UnityEngine.Random.Range(0, list.Count);
-        var obj = list[i];
-        return obj;
+
+        int count = collection.Count();
+        int index = UnityEngine.Random.Range(0, count);
+        
+        return collection.ElementAt(index);
     }
 
     /// <summary>
