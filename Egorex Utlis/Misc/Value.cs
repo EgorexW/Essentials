@@ -4,18 +4,18 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public interface IValue{
-    UnityEvent<ValueChangeCallback> OnValueChanged{ get; }
+    UnityEvent<ValueChange> OnValueChanged{ get; }
     float GetValue();
     Vector2 GetMinMax();
     void SetValue(float newValue);
 }
 
-public struct ValueChangeCallback{
+public struct ValueChange{
     public float newValue;
     public float previousValue;
     public float diff => newValue - previousValue;
 
-    public ValueChangeCallback(float value, float previousValueTmp){
+    public ValueChange(float value, float previousValueTmp){
         newValue = value;
         previousValue = previousValueTmp;
     }
@@ -29,9 +29,9 @@ public class Value : IValue{
     [SerializeField] float value;
     [SerializeField] Vector2 minMax = new(0, 100);
 
-    [FoldoutGroup("Events")] public UnityEvent<ValueChangeCallback> onValueChanged = new();
+    [FoldoutGroup("Events")] public UnityEvent<ValueChange> onValueChanged = new();
 
-    public UnityEvent<ValueChangeCallback> OnValueChanged => onValueChanged;
+    public UnityEvent<ValueChange> OnValueChanged => onValueChanged;
 
     public float GetValue(){
         return value;
@@ -50,7 +50,7 @@ public class Value : IValue{
         if (value - previousValue == 0){
             return;
         }
-        onValueChanged.Invoke(new ValueChangeCallback(value, previousValue));
+        onValueChanged.Invoke(new ValueChange(value, previousValue));
     }
 
     public void SetMinMax(Vector2 minMax){
