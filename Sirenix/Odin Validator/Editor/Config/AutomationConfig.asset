@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Sirenix.OdinValidator.Editor.dll::Sirenix.OdinValidator.Editor.AutomationConfig
   OnPlayMode: 1
   OnPlayModeIfWarnings: 0
-  OnPlayModeIfErrors: 3
+  OnPlayModeIfErrors: 7
   OnPlayModeAlwaysCompleteValidationFully: 0
   OnPlayModeFlashScreen: 0
   OnPlayModeSetup:
