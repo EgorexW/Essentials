@@ -7,7 +7,7 @@ public abstract class ObjectRoot<T> : MonoBehaviour where T : MonoBehaviour{
     
     public event Action onStructureChanged;
 
-    public new T1 GetPart<T1>() where T1 : T{
+    public T1 GetPart<T1>() where T1 : T{
         var componentsList = GetParts<T1>();
         if (componentsList.Count == 0){
             return null;
@@ -19,7 +19,7 @@ public abstract class ObjectRoot<T> : MonoBehaviour where T : MonoBehaviour{
         return componentsList[0];
     }
 
-    public new virtual IReadOnlyList<T1> GetParts<T1>() where T1 : T{
+    public virtual IReadOnlyList<T1> GetParts<T1>() where T1 : T{
         var type = typeof(T1);
         if (_componentsCache.TryGetValue(type, out var cachedObject)){
             return (List<T1>)cachedObject;
