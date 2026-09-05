@@ -30,6 +30,26 @@ public class SpawnTable : ScriptableObject{
     public GameObject GetGameObject(){
         return GetAsset<GameObject>();
     }
+    
+    public List<T> GetAssets<T>() where T : Object{
+        var assets = new List<T>();
+        var visited = new HashSet<SpawnTable>{ this };
+        var toProcess = new Queue<SpawnTable>();
+        toProcess.Enqueue(this);
+        while (toProcess.Count > 0){
+            foreach (var item in toProcess.Dequeue().gameObjects){
+                if (item.Object is SpawnTable nestedTable){
+                    if (visited.Add(nestedTable)){
+                        toProcess.Enqueue(nestedTable);
+                    }
+                }
+                else if (item.Object is T castedObj && !assets.Contains(castedObj)){
+                    assets.Add(castedObj);
+                }
+            }
+        }
+        return assets;
+    }
 
     public T GetAsset<T>() where T : Object{
         if (gameObjects.Count == 0){
