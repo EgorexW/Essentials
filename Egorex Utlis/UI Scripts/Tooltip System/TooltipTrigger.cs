@@ -2,7 +2,7 @@ using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IIgnorePointerOverUI{
+public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler{
     [SerializeField] Message message;
 
     [SerializeField] float delay = 0.5f;
