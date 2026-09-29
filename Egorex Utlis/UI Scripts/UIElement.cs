@@ -1,3 +1,4 @@
+using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,4 +19,12 @@ public class UIElement : MonoBehaviour{
         gameObject.SetActive(false);
         onHide.Invoke(this);
     }
+
+    // protected void OnDisable(){
+    //     Hide();
+    // }
+    //
+    // protected void OnEnable(){
+    //     Show();
+    // }
 }
