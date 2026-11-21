@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 public static class General{
-    public const int Iterationlimit = 10;
+    public const int Iterationlimit = 1000;
 
     public static readonly Vector2[] MainDirections2D = { Vector2.right, Vector2.left, Vector2.up, Vector2.down };
 
